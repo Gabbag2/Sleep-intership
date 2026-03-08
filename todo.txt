@@ -1,0 +1,7 @@
+Renommer les canaux qui ne matchent pas
+EOG G → EOG(L) (ou LOC) ex
+tout remapper les noms de tes channels pour qu’ils correspondent aux groupes de SleepFM
+transformer en hdf5
+
+faire des test pour filter automatiquement les bons canaux
+Voir je divise par quoi A 2 pour l'instannt 
