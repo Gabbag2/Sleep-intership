@@ -9,7 +9,9 @@ import yaml
 import os
 from datetime import datetime
 import sys
-sys.path.append("../")
+"""sys.path.append("../")"""
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
 from utils import *
 from models.models import SleepEventLSTMClassifier
 from models.dataset import SleepEventClassificationDataset as Dataset
@@ -49,11 +51,16 @@ def masked_cross_entropy_loss(outputs, y_data, mask):
 
 
 @click.command("finetune_sleep_staging")
-@click.option("--config_path", type=str, default='../configs/config_finetune_sleep_events.yaml')
-@click.option("--channel_groups_path", type=str, default='../configs/channel_groups.json' )
+@click.option("--config_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'configs', 'config_finetune_sleep_events.yaml')))
+@click.option("--channel_groups_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'configs', 'channel_groups.json')))
 @click.option("--checkpoint_path", type=str, default=None)
-@click.option("--split_path", type=str, default=None)
+@click.option("--split_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'configs', 'dataset_split.json')))
 @click.option("--train_split", type=str, default="train")
+
+
 def finetune_sleep_staging(config_path, channel_groups_path, checkpoint_path, split_path, train_split):
     # Load configuration
     config = load_config(config_path)
@@ -61,7 +68,7 @@ def finetune_sleep_staging(config_path, channel_groups_path, checkpoint_path, sp
 
     prefix = config["labels_path"].split("/")[-1]
     current_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
+    print(prefix,current_timestamp)
     if split_path:
         config["split_path"] = split_path
     
@@ -75,7 +82,9 @@ def finetune_sleep_staging(config_path, channel_groups_path, checkpoint_path, sp
         output = checkpoint_path
         config = load_data(os.path.join(output, "config.json"))
     else:
-        output = os.path.join(config["model_path"], f"{config['model']}_{dataset_prefix}_{prefix}_{channel_like_string}")
+        #output = os.path.join(config["model_path"], f"{config['model']}_{dataset_prefix}_{prefix}_{channel_like_string}")
+         
+        output = os.path.join(config["model_path"], f"{config['model']}_{'custom'}_{'scoring'}_{channel_like_string}")
         os.makedirs(output, exist_ok=True)
     
     # Set up logging

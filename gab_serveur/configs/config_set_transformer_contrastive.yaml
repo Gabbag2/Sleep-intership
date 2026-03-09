@@ -17,9 +17,9 @@ pooling_head: 8
 dropout: 0.3
 
 # after the preprocessing step, make sure to point this to your data folder
-data_path: 
-split_path: 
-save_path: 
+data_path: '/data/'
+split_path: ''
+save_path: '../checkpoints/'
 weight_decay: 0.0
 
 # contrastive learning objective you want. pairwise vs. leave_one_out

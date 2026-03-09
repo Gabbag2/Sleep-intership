@@ -4,7 +4,8 @@ from torch import nn
 from loguru import logger
 import os
 import sys
-sys.path.append("../")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
 from utils import *
 from models.dataset import SetTransformerDataset, collate_fn
 from models.models import SetTransformer
@@ -20,16 +21,22 @@ import h5py
 
 
 @click.command("generate_embeddings")
-@click.option("--model_path", type=str, default='path')
+@click.option("--model_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'checkpoints', 'model_base')))
 @click.option("--dataset_name", type=str, default='custom')
-@click.option("--channel_groups_path", type=str, default='../configs/channel_groups.json')
-@click.option("--split_path", type=str, default='../configs/dataset_split.json')
+@click.option("--channel_groups_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'configs', 'channel_groups.json')))
+@click.option("--split_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'configs', 'dataset_split.json')))
 @click.option("--splits", type=str, default='train,validation,test')
-@click.option("--num_workers", type=int, default=16)
-@click.option("--batch_size", type=int, default=128)
+@click.option("--num_workers", type=int, default=12)
+@click.option("--batch_size", type=int, default=10)
+@click.option("--data_path", type=str, 
+              default=os.path.normpath(os.path.join(ROOT_DIR, 'data','preprocessed')))
 
 def generate_embeddings(
     model_path,
+    data_path,
     dataset_name, 
     channel_groups_path, 
     split_path,
@@ -59,7 +66,7 @@ def generate_embeddings(
     pooling_head = config["pooling_head"]
     dropout = 0.0
 
-    data_path = config["data_path"]
+    config["data_path"] = data_path
 
     logger.info(f"Output Path: {output}")
     logger.info(f"Output 5 Min Agg Path: {output_5min_agg}")
@@ -80,19 +87,21 @@ def generate_embeddings(
     else:
         hdf5_paths = []
         for split in splits:
-            filtered_files = [fp for fp in split_dataset[split] if dataset_name in fp.lower()]
+            filtered_files = [fp for fp in split_dataset[split]]
             hdf5_paths += filtered_files
         
         hdf5_paths = [os.path.join(data_path, file) for file in hdf5_paths]
 
     logger.info(f"Number of files to process: {len(hdf5_paths)}")
-
+    
     dataset = SetTransformerDataset(config, channel_groups, hdf5_paths=hdf5_paths, split="test")
+    logger.info(f"dataset lenght {(len(dataset) )}")
     dataloader = torch.utils.data.DataLoader(dataset, 
                                              batch_size=batch_size, 
                                              num_workers=num_workers, 
                                              shuffle=False, 
                                              collate_fn=collate_fn)
+    logger.info(f"len(dataloader): {len(dataloader)}")
 
     logger.info(f"Dataset loaded in {time.time() - start:.1f} seconds")
 
@@ -112,7 +121,7 @@ def generate_embeddings(
 
     with torch.no_grad():
         with tqdm.tqdm(total=len(dataloader)) as pbar:
-            for batch in dataloader:
+            for batch in dataloader:  
                 batch_data, mask_list, file_paths, dset_names_list, chunk_starts = batch
                 (bas, resp, ekg, emg) = batch_data
                 (mask_bas, mask_resp, mask_ekg, mask_emg) = mask_list
@@ -133,7 +142,6 @@ def generate_embeddings(
                     model(ekg, mask_ekg),
                     model(emg, mask_emg),
                 ]
-
                 embeddings_new = [e[0].unsqueeze(1) for e in embeddings]
 
                 for i in range(len(file_paths)):
@@ -141,7 +149,6 @@ def generate_embeddings(
                     chunk_start = chunk_starts[i]
                     subject_id = os.path.basename(file_path).split('.')[0]
                     output_path = os.path.join(output_5min_agg, f"{subject_id}.hdf5")
-
                     with h5py.File(output_path, 'a') as hdf5_file:
                         for modality_idx, modality_type in enumerate(config["modality_types"]):
                             if modality_type in hdf5_file:
@@ -173,6 +180,7 @@ def generate_embeddings(
                                 dset[chunk_start_correct:chunk_end] = embeddings_new[modality_idx][i].cpu().numpy()
                             else:
                                 hdf5_file.create_dataset(modality_type, data=embeddings_new[modality_idx][i].cpu().numpy(), chunks=(embed_dim,) + embeddings_new[modality_idx][i].shape[1:], maxshape=(None,) + embeddings_new[modality_idx][i].shape[1:])
+                        logger.info(f"done")
                 pbar.update()
 
 if __name__ == '__main__':

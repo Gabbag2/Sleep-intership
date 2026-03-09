@@ -1,0 +1,18 @@
+{
+    "pretrain": [
+    ],
+    "train": [
+       
+    ],
+    "validation": [
+
+    ],
+    "test": [
+      "C1_001_PSG1.hdf5",
+      "C1_002_PSG1.hdf5"
+    ],
+    "temporal_test": [],
+    "external_validation": [
+       
+    ]
+}
