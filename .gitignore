@@ -2,3 +2,8 @@
 *.edf
 *.hdf5
 *.fif
+*.txt
+*.png
+*.jpg
+arthur/
+data_test/
