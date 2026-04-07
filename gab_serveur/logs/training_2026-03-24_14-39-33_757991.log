@@ -1,0 +1,20 @@
+2026-03-24 14:39:33.760 | INFO     | __main__:finetune_sleep_staging:97 - Loaded configuration file
+2026-03-24 14:39:33.760 | INFO     | __main__:finetune_sleep_staging:98 - Batch Size 16
+2026-03-24 14:39:33.877 | INFO     | __main__:finetune_sleep_staging:103 - Using device: cuda
+2026-03-24 14:39:33.877 | INFO     | __main__:finetune_sleep_staging:108 - Model Class: SleepEventLSTMClassifier
+2026-03-24 14:39:34.168 | INFO     | __main__:finetune_sleep_staging:117 - Model initialized: SleepEventLSTMClassifier
+2026-03-24 14:39:34.169 | INFO     | __main__:finetune_sleep_staging:119 - Trainable parameters: 1.19 million
+2026-03-24 14:39:34.169 | INFO     | __main__:finetune_sleep_staging:120 - Number of layers: 20
+2026-03-24 14:39:34.169 | INFO     | __main__:finetune_sleep_staging:122 - Loading Data...
+2026-03-24 14:39:34.173 | INFO     | models.dataset:__init__:239 - Number of files in train set: 1
+2026-03-24 14:39:34.173 | INFO     | models.dataset:__init__:240 - Number of files to be processed in train set: 1
+2026-03-24 14:39:34.178 | INFO     | models.dataset:__init__:239 - Number of files in validation set: 1
+2026-03-24 14:39:34.179 | INFO     | models.dataset:__init__:240 - Number of files to be processed in validation set: 1
+2026-03-24 14:39:34.179 | INFO     | __main__:finetune_sleep_staging:129 - Number of workers: 8
+2026-03-24 14:39:34.179 | INFO     | __main__:finetune_sleep_staging:136 - Data Loaded!
+2026-03-24 14:39:47.400 | INFO     | __main__:finetune_sleep_staging:235 - Epoch [1/2] Loss: 3.6822
+2026-03-24 14:39:57.006 | INFO     | __main__:finetune_sleep_staging:256 - Validation Loss after Epoch [1/2]: 3.3529
+2026-03-24 14:39:57.042 | INFO     | __main__:finetune_sleep_staging:269 - Best model saved at C:\Users\gabri\Desktop\stage_sommeil\algo\gab_serveur\checkpoints\model_finetune\custom\SleepEventLSTMClassifier_custom_scoring_BAS_RESP_EKG_EMG\best.pth
+2026-03-24 14:40:05.844 | INFO     | __main__:finetune_sleep_staging:235 - Epoch [2/2] Loss: 3.2902
+2026-03-24 14:40:14.699 | INFO     | __main__:finetune_sleep_staging:256 - Validation Loss after Epoch [2/2]: 3.1115
+2026-03-24 14:40:14.715 | INFO     | __main__:finetune_sleep_staging:269 - Best model saved at C:\Users\gabri\Desktop\stage_sommeil\algo\gab_serveur\checkpoints\model_finetune\custom\SleepEventLSTMClassifier_custom_scoring_BAS_RESP_EKG_EMG\best.pth

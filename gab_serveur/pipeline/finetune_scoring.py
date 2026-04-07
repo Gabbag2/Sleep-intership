@@ -1,4 +1,7 @@
+from logging import config
+
 import click
+from numpy import split
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -68,7 +71,7 @@ def finetune_sleep_staging(config_path, channel_groups_path, checkpoint_path, sp
 
     prefix = config["labels_path"].split("/")[-1]
     current_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    print(prefix,current_timestamp)
+
     if split_path:
         config["split_path"] = split_path
     

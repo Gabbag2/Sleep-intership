@@ -1,11 +1,9 @@
 {
     "pretrain": [
     ],
-    "train": [
-       
+    "train": ["C1_001_PSG1.hdf5"
     ],
-    "validation": [
-
+    "validation": ["C1_002_PSG1.hdf5"
     ],
     "test": [
       "C1_001_PSG1.hdf5",

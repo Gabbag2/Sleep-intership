@@ -190,26 +190,32 @@ class SleepEventClassificationDataset(Dataset):
 
         for dataset_name in dataset:
             label_files += glob.glob(os.path.join(labels_path, dataset_name, "**", "*.csv"), recursive=True)
-
         # label_files = [label_file for label_file in os.listdir(labels_path) if label_file.endswith(".csv")]
 
         hdf5_paths = load_data(config["split_path"])[split]
+        print("hdf5 paths found in split:", len(hdf5_paths), hdf5_paths[:5])
         hdf5_paths = [os.path.join(data_path, path) for path in hdf5_paths]
+        print("hdf5 paths found in split:", len(hdf5_paths), hdf5_paths[:5])
         study_ids = set([os.path.basename(label_file).split(".")[0] for label_file in label_files])
-
+        print("study ids found in labels:", len(study_ids), list(study_ids)[:5])
         hdf5_paths = [f for f in hdf5_paths if os.path.exists(f)]
-        hdf5_paths = [f for f in hdf5_paths if f.split("/")[-1].split(".")[0] in study_ids]
-
+        """hdf5_paths = [f for f in hdf5_paths if f.split("\\")[-1].split(".")[0] in study_ids]"""
+        hdf5_paths = [f for f in hdf5_paths if os.path.basename(f).split(".")[0] in study_ids]
+        print("hdf5 paths after filtering:", len(hdf5_paths), hdf5_paths[:5])
+        missing_csv = [f for f in hdf5_paths if os.path.basename(f).split(".")[0] not in study_ids]
+        print("HDF5 sans CSV label:", len(missing_csv), missing_csv[:5])
         hdf5_paths_ids = set([os.path.basename(hdf5_path).split(".")[0] for hdf5_path in hdf5_paths])
-
+        print("hdf5 paths ids:", len(hdf5_paths_ids), list(hdf5_paths_ids)[:5])
         hdf5_paths_new = []
         for dataset_name in dataset:
-            hdf5_paths_new += glob.glob(os.path.join(config["model_path"], dataset_name, "**", "*.hdf5"), recursive=True)
+            hdf5_paths_new += glob.glob(os.path.join(config["model_path"], "**", "*.hdf5"), recursive=True)
+            print(f"hdf5 paths found in model path for dataset {dataset_name}:", len(hdf5_paths_new), hdf5_paths_new[:5])
         
-        hdf5_paths_new = [item for item in hdf5_paths_new if os.path.basename(item).split(".")[0] in hdf5_paths_ids]
+        """hdf5_paths_new = [item for item in hdf5_paths_new if os.path.basename(item).split(".")[0] in hdf5_paths_ids]
         hdf5_paths = hdf5_paths_new
         hdf5_paths = [f for f in hdf5_paths if os.path.exists(f)]
-
+        print("hdf5 paths after filtering with model path:", len(hdf5_paths), hdf5_paths[:5])"""
+        
         if config["max_files"]:
             hdf5_paths = hdf5_paths[:config["max_files"]]
         else:
@@ -220,7 +226,9 @@ class SleepEventClassificationDataset(Dataset):
         }
 
         if self.context == -1:
-            self.index_map = [(path, labels_dict[path.split("/")[-1].split(".")[0]], -1) for path in hdf5_paths]
+            """self.index_map = [(path, labels_dict[path.split("\\")[-1].split(".")[0]], -1) for path in hdf5_paths]"""
+            # APRES
+            self.index_map = [(path, labels_dict[os.path.basename(path).split(".")[0]], -1) for path in hdf5_paths]
         else:
             self.index_map = []
             loop = tqdm(hdf5_paths[:], total=len(hdf5_paths), desc=f"Indexing {split} data")

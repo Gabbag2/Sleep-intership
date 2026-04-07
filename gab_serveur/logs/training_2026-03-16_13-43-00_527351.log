@@ -1,0 +1,13 @@
+2026-03-16 13:43:00.528 | INFO     | __main__:finetune_sleep_staging:97 - Loaded configuration file
+2026-03-16 13:43:00.529 | INFO     | __main__:finetune_sleep_staging:98 - Batch Size 16
+2026-03-16 13:43:00.552 | INFO     | __main__:finetune_sleep_staging:103 - Using device: cuda
+2026-03-16 13:43:00.553 | INFO     | __main__:finetune_sleep_staging:108 - Model Class: SleepEventLSTMClassifier
+2026-03-16 13:43:00.779 | INFO     | __main__:finetune_sleep_staging:117 - Model initialized: SleepEventLSTMClassifier
+2026-03-16 13:43:00.780 | INFO     | __main__:finetune_sleep_staging:119 - Trainable parameters: 1.19 million
+2026-03-16 13:43:00.781 | INFO     | __main__:finetune_sleep_staging:120 - Number of layers: 20
+2026-03-16 13:43:00.781 | INFO     | __main__:finetune_sleep_staging:122 - Loading Data...
+2026-03-16 13:43:00.784 | INFO     | models.dataset:__init__:237 - Number of files in train set: 0
+2026-03-16 13:43:00.784 | INFO     | models.dataset:__init__:238 - Number of files to be processed in train set: 0
+2026-03-16 13:43:00.785 | INFO     | models.dataset:__init__:237 - Number of files in validation set: 0
+2026-03-16 13:43:00.786 | INFO     | models.dataset:__init__:238 - Number of files to be processed in validation set: 0
+2026-03-16 13:43:00.786 | INFO     | __main__:finetune_sleep_staging:129 - Number of workers: 8

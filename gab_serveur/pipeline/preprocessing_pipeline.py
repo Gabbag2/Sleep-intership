@@ -13,22 +13,24 @@ from preprocessing.preprocessing import edf_to_hdf5, txt_to_csv
 @click.option("--input_folder", type=str, 
               default=os.path.join(ROOT_DIR, 'data'),
               help="Folder containing EDF files")
+@click.option("--dataset_name", type=str, default='custom', help="Name of the dataset (e.g., 'custom', 'mesa')")
 @click.option("--output_folder", type=str, 
               default=os.path.join(ROOT_DIR, 'data', 'preprocessed'),
               help="Folder to save HDF5 files")
 
-def run_preprocessing(input_folder, output_folder):
+def run_preprocessing(input_folder, dataset_name, output_folder):
     """
     Convert all EDF files in input_folder to HDF5 format
     """
     logger.info(f"📂 Input folder: {input_folder}")
     logger.info(f"💾 Output folder: {output_folder}")
-    
+    logger.info(f"🏷️ Dataset name: {dataset_name}")
+
     # Vérifier que le dossier input existe
     if not os.path.exists(input_folder):
         logger.error(f"❌ Input folder does not exist: {input_folder}")
         sys.exit(1)
-    
+    output_folder = os.path.join(output_folder, dataset_name)
     # Créer le dossier output si nécessaire
     os.makedirs(output_folder, exist_ok=True)
     logger.info(f"✅ Output folder ready")

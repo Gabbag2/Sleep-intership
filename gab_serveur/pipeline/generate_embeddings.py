@@ -44,6 +44,7 @@ def generate_embeddings(
     num_workers, 
     batch_size
 ):
+    data_path = os.path.join(data_path, dataset_name)
     config_path = os.path.join(model_path, "config.json")
     config = load_config(config_path)
     channel_groups = load_data(channel_groups_path)
@@ -91,7 +92,16 @@ def generate_embeddings(
             hdf5_paths += filtered_files
         
         hdf5_paths = [os.path.join(data_path, file) for file in hdf5_paths]
-
+        print("hdf5 paths found:", len(hdf5_paths), hdf5_paths[:5])
+        
+    labels =[]
+    for hdf in hdf5_paths:
+        label = hdf.replace(".hdf5", ".csv")
+        labels.append(label)
+        filename = os.path.basename(label)
+        shutil.copy(label, output)
+        shutil.copy(label, output_5min_agg)
+        
     logger.info(f"Number of files to process: {len(hdf5_paths)}")
     
     dataset = SetTransformerDataset(config, channel_groups, hdf5_paths=hdf5_paths, split="test")

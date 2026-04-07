@@ -496,7 +496,7 @@ def edf_to_hdf5(input_folder, output_folder, CHANNEL_OI=CHANNEL_OI):
         except Exception as e:
             errors += 1
             tqdm.write(f"❌ {basename}: {str(e)[:50]}")
-        os.remove(edf_path)
+        """os.remove(edf_path)"""
     # Résumé
     print(f"\n{'='*50}")
     print(f"✅ Réussis:  {success}")
